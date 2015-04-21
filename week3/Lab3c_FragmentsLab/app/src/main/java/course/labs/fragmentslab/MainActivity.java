@@ -1,82 +1,85 @@
 package course.labs.fragmentslab;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.FrameLayout;
 
 public class MainActivity extends Activity implements
-		FriendsFragment.SelectionListener {
+        FriendsFragment.SelectionListener {
 
-	private static final String TAG = "Lab-Fragments";
+    private static final String TAG = "Lab-Fragments";
 
-	private FriendsFragment mFriendsFragment;
-	private FeedFragment mFeedFragment;
+    private FriendsFragment mFriendsFragment;
+    private FeedFragment mFeedFragment;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main_activity);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main_activity);
 
-		// If the layout is single-pane, create the FriendsFragment 
-		// and add it to the Activity
+        // If the layout is single-pane, create the FriendsFragment
+        // and add it to the Activity
 
-		if (!isInTwoPaneMode()) {
-			
-			mFriendsFragment = new FriendsFragment();
+        if (!isInTwoPaneMode()) {
 
-			//TODO 1 - add the FriendsFragment to the fragment_container
-			
-			
-			
+            mFriendsFragment = new FriendsFragment();
 
-		} else {
+            //TODO 1 - DONE - add the FriendsFragment to the fragment_container
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.add(R.id.fragment_container, mFriendsFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
 
-			// Otherwise, save a reference to the FeedFragment for later use
+        } else {
 
-			mFeedFragment = (FeedFragment) getFragmentManager()
-					.findFragmentById(R.id.feed_frag);
-		}
+            // Otherwise, save a reference to the FeedFragment for later use
 
-	}
+            mFeedFragment = (FeedFragment) getFragmentManager()
+                    .findFragmentById(R.id.feed_frag);
+        }
 
-	// If there is no fragment_container ID, then the application is in
-	// two-pane mode
+    }
 
-	private boolean isInTwoPaneMode() {
+    // If there is no fragment_container ID, then the application is in
+    // two-pane mode
 
-		return findViewById(R.id.fragment_container) == null;
-	
-	}
+    private boolean isInTwoPaneMode() {
 
-	// Display selected Twitter feed
+        return findViewById(R.id.fragment_container) == null;
 
-	public void onItemSelected(int position) {
+    }
 
-		Log.i(TAG, "Entered onItemSelected(" + position + ")");
+    // Display selected Twitter feed
 
-		// If there is no FeedFragment instance, then create one
+    public void onItemSelected(int position) {
 
-		if (mFeedFragment == null)
-			mFeedFragment = new FeedFragment();
+        Log.i(TAG, "Entered onItemSelected(" + position + ")");
 
-		// If in single-pane mode, replace single visible Fragment
+        // If there is no FeedFragment instance, then create one
 
-		if (!isInTwoPaneMode()) {
+        if (mFeedFragment == null)
+            mFeedFragment = new FeedFragment();
 
-			//TODO 2 - replace the fragment_container with the FeedFragment
-			
+        // If in single-pane mode, replace single visible Fragment
 
-			
+        if (!isInTwoPaneMode()) {
 
-			// execute transaction now
-			getFragmentManager().executePendingTransactions();
+            //TODO 2 - DONE - replace the fragment_container with the FeedFragment
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, mFeedFragment);
+            fragmentTransaction.addToBackStack(null);
 
-		}
+            // execute transaction now
+            getFragmentManager().executePendingTransactions();
 
-		// Update Twitter feed display on FriendFragment
-		mFeedFragment.updateFeedDisplay(position);
+        }
 
-	}
+        // Update Twitter feed display on FriendFragment
+        mFeedFragment.updateFeedDisplay(position);
+
+    }
 
 }
