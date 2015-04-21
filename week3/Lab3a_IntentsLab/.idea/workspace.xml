@@ -995,6 +995,7 @@
     <property name="dynamic.classpath" value="false" />
     <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="4df11c260d246ff5" />
     <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="Galaxy_Nexus_API_21" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Lab3c_FragmentsLab" />
   </component>
   <component name="RunManager" selected="Android Tests.ImplicitTest">
     <configuration default="false" name="All in app" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
