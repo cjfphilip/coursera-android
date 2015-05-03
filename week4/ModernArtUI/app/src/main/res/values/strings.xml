@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MoMA.org - Modern Art</string>
+
+    <string name="more_information">More Information</string>
+    <string name="visit_moma">Visit MoMA</string>
+    <string name="notnow">Not Now</string>
+    <string name="visit_moma_message">MoMA is a modern art gallery I never knew about, would you like to visit it?</string>
+    <string name="random">Random</string>
+    <string name="visit_moma_title">Visit MoMA</string>
+</resources>
