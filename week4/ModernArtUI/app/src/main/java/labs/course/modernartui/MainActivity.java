@@ -67,14 +67,13 @@ public class MainActivity extends ActionBarActivity {
     private void generateRandomLayout() {
         //Randomly create some linear layouts that have a random colour.
         mMainLayout.removeAllViews();
-        int margin = 3;
-        int weight = 1;
+        int margin;
+        int weight;
         int totalVLayouts = randomBlocks();
         int greyVPos = r.nextInt(totalVLayouts) + 1;
 
         for (int i = 1; i <= totalVLayouts; i++) {
             weight = randomWeight();
-            margin = 1;
             LinearLayout randomVLayout = new LinearLayout(this);
             LinearLayout.LayoutParams layoutVParams = new LinearLayout.LayoutParams(MATCH_PARENT, 0, weight);
             randomVLayout.setLayoutParams(layoutVParams);
@@ -88,12 +87,12 @@ public class MainActivity extends ActionBarActivity {
                 int g = randomColour();
                 int b = randomColour();
                 weight = randomWeight();
-                margin = 1;
+                margin = 10;
                 if (i == greyVPos && j == greyHPos) {
                     mBlackLayout = randomHLayout;
-                    r = 0;
-                    g = 0;
-                    b = 0;
+                    r = 255;
+                    g = 255;
+                    b = 255;
                     margin = 10;
                 }
                 LinearLayout.LayoutParams layoutHParams = new LinearLayout.LayoutParams(0, MATCH_PARENT, weight);
