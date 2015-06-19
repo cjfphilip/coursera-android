@@ -13,12 +13,17 @@ namespace Chronological
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		const string path = @"C:\Users\Charles\Desktop\Chrono";
+		const string path = @"C:\Users\Charles\Documents\Android\Source\coursera-android\Chronological\Chrono";
 		List<MatchingLineToMp3> results = new List<MatchingLineToMp3>();
 
 		public MainWindow()
 		{
 			InitializeComponent();
+			Refresh();
+		}
+
+		void Refresh()
+		{
 			try
 			{
 				List<String> listOfItems = new List<string>();
@@ -30,10 +35,9 @@ namespace Chronological
 						String line = sr.ReadLine();
 						if (!string.IsNullOrWhiteSpace(line))
 						{
-							string result = "";
-							string mp3 = FindMatchingMp3(line);
-							result = (mp3 != null) ? "success" : "count not find mp3";
-							results.Add(new MatchingLineToMp3(line, mp3, result));
+							string message;
+							List<string> mp3S = FindMatchingMp3S(line, out message);
+							results.Add(new MatchingLineToMp3(line, mp3S, message));
 						}
 					}
 				}
@@ -45,28 +49,54 @@ namespace Chronological
 			}
 		}
 
-		string FindMatchingMp3(string line)
+		List<string> FindMatchingMp3S(string line, out string message)
 		{
-			string result = "";
+			message = "no chapters found";
+			List<string> result = new List<string>();
 			int splitPos = line.IndexOf(" ");
 			if (splitPos > -1)
 			{
-				string bookToFind = line.Substring(0, splitPos);
-				string chapterNumbers = line.Substring(splitPos);
-				int hyphenPos = chapterNumbers.IndexOf("-");
-				int chapterToStartWith = int.Parse(hyphenPos > -1 ? chapterNumbers.Substring(0, hyphenPos) : chapterNumbers);
-				int chapterToEndWith = (hyphenPos > -1) ;
-
-				string [] files = Directory.GetFiles(Path.Combine(path, "books"), "*.mp3", SearchOption.AllDirectories);
-				foreach (string file in files)
+				try
 				{
-					string mp3 
-					if (Path.GetFileName(file).Substring(2).StartsWith(line))
-					
+					string bookToFind = line.Substring(0, splitPos);
+					string chapterNumbers = line.Substring(splitPos);
+					int hyphenPos = chapterNumbers.IndexOf("-");
+					int chapterToStartWith = int.Parse(hyphenPos > -1 ? chapterNumbers.Substring(0, hyphenPos) : chapterNumbers);
+					int chapterToEndWith = hyphenPos > -1 ? int.Parse(chapterNumbers.Substring(hyphenPos + 1)) : chapterToStartWith;
+
+					string[] files = Directory.GetFiles(Path.Combine(path, "books"), "*.mp3", SearchOption.AllDirectories);
+					foreach (string file in files)
+					{
+						string fileName = Path.GetFileName(file);
+
+						if (fileName != null && fileName.Substring(3).StartsWith(bookToFind))
+						{
+							for (int chapter = chapterToStartWith; chapter <= chapterToEndWith; chapter++)
+							{
+								string chapterToLookFor = String.Format("Chapter {0:D2}.mp3", chapter);
+								if (fileName.Contains(chapterToLookFor))
+								{
+									result.Add(fileName);
+									break;
+								}
+							}
+						}
+					}
+
+					int totalNeeded = chapterToEndWith - chapterToStartWith + 1;
+					message = result.Count == totalNeeded ? "success" : String.Format("{0} mp3s found, but there needs to be {1}", result.Count, totalNeeded);
 				}
-				
+				catch (Exception ex)
+				{
+					message = ex.Message;
+				}
 			}
 			return result;
+		}
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			Refresh();
 		}
 	}
 }
