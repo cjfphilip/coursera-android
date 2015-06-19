@@ -25,3 +25,6 @@ proguard/
 
 # Log Files
 *.log
+*.mp3
+Chronological/Chronological/obj/
+*.suo
